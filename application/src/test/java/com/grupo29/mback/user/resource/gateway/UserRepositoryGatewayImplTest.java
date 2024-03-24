@@ -3,16 +3,20 @@ package com.grupo29.mback.user.resource.gateway;
 import com.grupo29.mback.user.entities.Address;
 import com.grupo29.mback.user.entities.User;
 import com.grupo29.mback.user.entities.UserRole;
+import com.grupo29.mback.user.resource.gateway.UserRepositoryGatewayImpl;
 import com.grupo29.mback.user.resource.repository.entity.AddressEntity;
 import com.grupo29.mback.user.resource.repository.entity.UserEntity;
 import com.grupo29.mback.user.resource.repository.spring.AddressRepositorySpring;
 import com.grupo29.mback.user.resource.repository.spring.UserRepositorySpring;
+import com.grupo29.mback.user.resource.repository.spring.UserRoleRepositorySpring;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,8 +30,11 @@ public class UserRepositoryGatewayImplTest {
     @Mock
     private AddressRepositorySpring addressRepositorySpring;
 
+    @Mock
+    private UserRoleRepositorySpring userRoleRepositorySpring;
+
     @InjectMocks
-    private UserRepositoryGatewayImpl userRepositoryGatewayImpl;
+    private UserRepositoryGatewayImpl userRepositoryGateway;
 
     @BeforeEach
     public void setUp() {
@@ -36,117 +43,84 @@ public class UserRepositoryGatewayImplTest {
 
     @Test
     public void testCreateUser() {
-        // Create a User
-        User user = User.builder()
-                .id(1L)
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .password("password")
-                .roles(UserRole.VENDOR)
-                .address(Address.builder()
-                        .street("123 Main St")
-                        .city("Springfield")
-                        .state("IL")
-                        .cep("12345")
-                        .build())
-                .build();
+        // Prepare test data
+        User user = createUser();
+        UserEntity userEntity = UserEntity.fromDomain(user);
+        when(userRepositorySpring.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        // Mock behavior for userRepositorySpring.save
-        UserEntity savedUserEntity = UserEntity.fromDomain(user);
-        AddressEntity addressEntity = AddressEntity.fromDomain(user.getAddress());
-        addressEntity.setId(1L); // Assuming an ID is generated during save
-        savedUserEntity.setAddress(addressEntity);
-        when(userRepositorySpring.save(any(UserEntity.class))).thenReturn(savedUserEntity);
+        // Test createUser
+        User createdUser = userRepositoryGateway.createUser(user);
 
-        // Mock behavior for addressRepositorySpring.save
-        when(addressRepositorySpring.save(any(AddressEntity.class))).thenReturn(addressEntity);
-
-        // Test createUser method
-        User savedUser = userRepositoryGatewayImpl.createUser(user);
-
-        // Assertions
-        assertNotNull(savedUser);
-        assertEquals(user, savedUser);
-
-        // Verify interactions with repositories
+        // Verify
+        assertNotNull(createdUser);
+        assertEquals(user, createdUser);
         verify(userRepositorySpring, times(1)).save(any(UserEntity.class));
         verify(addressRepositorySpring, times(1)).save(any(AddressEntity.class));
+        verify(userRoleRepositorySpring, times(1)).saveAll(anyIterable());
     }
 
     @Test
     public void testGetUserById_UserFound() {
+        // Prepare test data
         Long userId = 1L;
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId);
-        User expectedUser = User.builder()
-                .id(userId)
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .password("password")
-                .roles(UserRole.VENDOR)
-                .address(Address.builder()
-                        .street("123 Main St")
-                        .city("Springfield")
-                        .state("IL")
-                        .cep("12345")
-                        .build())
-                .build();
-
+        User user = createUser();
+        UserEntity userEntity = UserEntity.fromDomain(user);
         when(userRepositorySpring.findById(userId)).thenReturn(Optional.of(userEntity));
 
-        User foundUser = userRepositoryGatewayImpl.getUserById(userId);
+        // Test getUserById
+        User retrievedUser = userRepositoryGateway.getUserById(userId);
 
-        assertNotNull(foundUser);
-        assertEquals(expectedUser, foundUser);
+        // Verify
+        assertNotNull(retrievedUser);
+        assertEquals(user, retrievedUser);
+        verify(userRepositorySpring, times(1)).findById(userId);
     }
 
     @Test
     public void testGetUserById_UserNotFound() {
+        // Prepare test data
         Long userId = 1L;
-
         when(userRepositorySpring.findById(userId)).thenReturn(Optional.empty());
 
-        User foundUser = userRepositoryGatewayImpl.getUserById(userId);
-
-        assertNull(foundUser);
+        // Test getUserById
+        assertThrows(NoSuchElementException.class, () -> userRepositoryGateway.getUserById(userId));
+        verify(userRepositorySpring, times(1)).findById(userId);
     }
 
     @Test
     public void testUpdateUser() {
-        User user = User.builder()
-                .id(1L)
-                .name("John Doe")
-                .email("john.doe@example.com")
-                .password("password")
-                .roles(UserRole.VENDOR)
-                .address(Address.builder()
-                        .street("123 Main St")
-                        .city("Springfield")
-                        .state("IL")
-                        .cep("12345")
-                        .build())
-                .build();
+        // Prepare test data
+        User user = createUser();
+        UserEntity userEntity = UserEntity.fromDomain(user);
+        when(userRepositorySpring.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        UserEntity updatedUserEntity = UserEntity.fromDomain(user);
-        AddressEntity addressEntity = AddressEntity.fromDomain(user.getAddress());
-        addressEntity.setId(1L); // Assuming an ID is generated during save
-        updatedUserEntity.setAddress(addressEntity);
+        // Test updateUser
+        User updatedUser = userRepositoryGateway.updateUser(user);
 
-        when(addressRepositorySpring.save(any(AddressEntity.class))).thenReturn(addressEntity);
-        when(userRepositorySpring.save(any(UserEntity.class))).thenReturn(updatedUserEntity);
-
-        User updatedUser = userRepositoryGatewayImpl.updateUser(user);
-
+        // Verify
         assertNotNull(updatedUser);
         assertEquals(user, updatedUser);
+        verify(userRepositorySpring, times(1)).save(any(UserEntity.class));
+        verify(addressRepositorySpring, times(1)).save(any(AddressEntity.class));
+        verify(userRoleRepositorySpring, times(1)).saveAll(anyIterable());
     }
 
     @Test
     public void testDeleteUserById() {
-        Long userId = 1L;
+        // Test deleteUserById
+        userRepositoryGateway.deleteUserById(1L);
+        verify(userRepositorySpring, times(1)).deleteById(1L);
+    }
 
-        userRepositoryGatewayImpl.deleteUserById(userId);
-
-        verify(userRepositorySpring, times(1)).deleteById(userId);
+    // Helper method to create a sample user
+    private User createUser() {
+        return User.builder()
+                .id(1L)
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .password("password")
+                .address(Address.builder().street("123 Main St").city("Springfield").state("IL").cep("12345").build())
+                .roles(Collections.singletonList(UserRole.builder().id(1L).name("ROLE_USER").build()))
+                .build();
     }
 }

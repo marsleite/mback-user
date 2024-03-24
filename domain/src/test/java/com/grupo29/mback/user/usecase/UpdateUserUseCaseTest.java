@@ -8,6 +8,8 @@ import com.grupo29.mback.user.gateway.UserRepositoryGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -30,7 +32,7 @@ public class UpdateUserUseCaseTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .roles(UserRole.VENDOR)
+                .roles(List.of(new UserRole(2L, "VENDOR")))
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Springfield")
@@ -44,7 +46,7 @@ public class UpdateUserUseCaseTest {
                 .name("Jane Smith")
                 .email("jane.smith@example.com")
                 .password("newpassword")
-                .roles(UserRole.ADMIN)
+                .roles(List.of(new UserRole(1L, "ADMIN")))
                 .address(Address.builder()
                         .street("456 Oak St")
                         .city("Chicago")
@@ -73,7 +75,7 @@ public class UpdateUserUseCaseTest {
                 .name("Jane Smith")
                 .email("jane.smith@example.com")
                 .password("newpassword")
-                .roles(UserRole.ADMIN)
+                .roles(List.of(new UserRole(1L, "ADMIN")))
                 .address(Address.builder()
                         .street("456 Oak St")
                         .city("Chicago")

@@ -2,6 +2,9 @@ package com.grupo29.mback.user.entities;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -24,7 +27,7 @@ public class UserTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password123")
-                .roles(UserRole.VENDOR)
+                .roles(List.of(new UserRole(1L, "VENDOR")))
                 .address(address)
                 .build();
     }
@@ -35,7 +38,7 @@ public class UserTest {
         assertEquals("John Doe", user.getName());
         assertEquals("john.doe@example.com", user.getEmail());
         assertEquals("password123", user.getPassword());
-        assertEquals(UserRole.VENDOR, user.getRoles());
+        assertEquals(new UserRole(1L, "VENDOR"), user.getRoles().get(0));
         assertEquals("123 Main St", user.getAddress().getStreet());
         assertEquals("Springfield", user.getAddress().getCity());
         assertEquals("IL", user.getAddress().getState());
@@ -49,7 +52,7 @@ public class UserTest {
                 .name("Jane Smith")
                 .email("jane.smith@example.com")
                 .password("password456")
-                .roles(UserRole.ADMIN)
+                .roles(List.of(new UserRole(1L, "ADMIN")))
                 .address(null)
                 .build();
 
@@ -57,13 +60,13 @@ public class UserTest {
         assertEquals("Jane Smith", newUser.getName());
         assertEquals("jane.smith@example.com", newUser.getEmail());
         assertEquals("password456", newUser.getPassword());
-        assertEquals(UserRole.ADMIN, newUser.getRoles());
+        assertEquals(new UserRole(1L, "ADMIN"), newUser.getRoles().get(0));
         assertNull(newUser.getAddress());
     }
 
     @Test
     public void testToString() {
-        String expectedToString = "User(id=1, name=John Doe, email=john.doe@example.com, password=password123, userType=REGULAR, address=Address(id=1, street=123 Main St, city=Springfield, state=IL, cep=12345))";
+        String expectedToString = "User(id=1, name=John Doe, email=john.doe@example.com, password=password123, roles=[UserRole(id=1, name=VENDOR)], address=Address(id=1, street=123 Main St, city=Springfield, state=IL, cep=12345))";
         assertEquals(expectedToString, user.toString());
     }
 }
