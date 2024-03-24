@@ -6,11 +6,15 @@ import com.grupo29.mback.user.usecase.CreateUserUseCase;
 import com.grupo29.mback.user.usecase.DeleteUserUseCase;
 import com.grupo29.mback.user.usecase.FindUserUseCase;
 import com.grupo29.mback.user.usecase.UpdateUserUseCase;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
+@Log4j2
 public class UserController {
     @Autowired
     private CreateUserUseCase createUserUseCase;
@@ -26,22 +30,38 @@ public class UserController {
 
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) throws UserException {
-        return findUserUseCase.execute(id);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(findUserUseCase.execute(id));
+        } catch (UserException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) throws UserException {
-        return createUserUseCase.execute(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(createUserUseCase.execute(user));
+        } catch (UserException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User userDetails) throws UserException {
-        return updateUserUseCase.execute(id, userDetails);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        try {
+            return ResponseEntity.ok(updateUserUseCase.execute(id, userDetails));
+        } catch (UserException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         deleteUserUseCase.execute(id);
+        return ResponseEntity.ok().build();
     }
 }

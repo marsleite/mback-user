@@ -34,4 +34,14 @@ public class AddressEntity {
                 .cep(this.cep)
                 .build();
     }
+
+    public static AddressEntity fromDomain(Address address) {
+        return AddressEntity.builder()
+                .id(address.getId())
+                .street(address.getStreet())
+                .city(address.getCity())
+                .state(address.getState())
+                .cep(address.getCep())
+                .build();
+    }
 }
