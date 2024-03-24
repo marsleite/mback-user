@@ -49,7 +49,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         try {
             return ResponseEntity.ok(updateUserUseCase.execute(id, userDetails));
@@ -59,7 +59,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         deleteUserUseCase.execute(id);
         return ResponseEntity.ok().build();

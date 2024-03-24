@@ -24,7 +24,7 @@ public class UserTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password123")
-                .userType(UserType.VENDOR)
+                .roles(UserRole.VENDOR)
                 .address(address)
                 .build();
     }
@@ -35,7 +35,7 @@ public class UserTest {
         assertEquals("John Doe", user.getName());
         assertEquals("john.doe@example.com", user.getEmail());
         assertEquals("password123", user.getPassword());
-        assertEquals(UserType.VENDOR, user.getUserType());
+        assertEquals(UserRole.VENDOR, user.getRoles());
         assertEquals("123 Main St", user.getAddress().getStreet());
         assertEquals("Springfield", user.getAddress().getCity());
         assertEquals("IL", user.getAddress().getState());
@@ -49,7 +49,7 @@ public class UserTest {
                 .name("Jane Smith")
                 .email("jane.smith@example.com")
                 .password("password456")
-                .userType(UserType.ADMIN)
+                .roles(UserRole.ADMIN)
                 .address(null)
                 .build();
 
@@ -57,7 +57,7 @@ public class UserTest {
         assertEquals("Jane Smith", newUser.getName());
         assertEquals("jane.smith@example.com", newUser.getEmail());
         assertEquals("password456", newUser.getPassword());
-        assertEquals(UserType.ADMIN, newUser.getUserType());
+        assertEquals(UserRole.ADMIN, newUser.getRoles());
         assertNull(newUser.getAddress());
     }
 

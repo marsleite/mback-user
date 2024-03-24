@@ -1,12 +1,15 @@
 package com.grupo29.mback.user.resource.repository.entity;
 
 import com.grupo29.mback.user.entities.User;
-import com.grupo29.mback.user.entities.UserType;
+import com.grupo29.mback.user.entities.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Data
@@ -22,7 +25,12 @@ public class UserEntity {
     private String name;
     private String email;
     private String password;
-    private UserType userType;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_role_id"))
+    private List<UserRoleEntity> roles;
 
     @OneToOne
     @JoinColumn(name = "address_id")
@@ -42,7 +50,8 @@ public class UserEntity {
                 .name(user.getName())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .userType(user.getUserType())
+                .roles(user.getRoles().stream().map(UserRoleEntity::fromDomain)
+                        .collect(Collectors.toList()))
                 .address(addressEntity)
                 .build();
     }
@@ -53,7 +62,8 @@ public class UserEntity {
                 .name(this.name)
                 .email(this.email)
                 .password(this.password)
-                .userType(this.userType)
+                .roles(this.roles.stream().map(UserRoleEntity::toDomain)
+                        .collect(Collectors.toList()))
                 .address(this.address.toDomain())
                 .build();
     }

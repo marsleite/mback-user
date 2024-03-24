@@ -2,7 +2,7 @@ package com.grupo29.mback.user.usecase;
 
 import com.grupo29.mback.user.entities.Address;
 import com.grupo29.mback.user.entities.User;
-import com.grupo29.mback.user.entities.UserType;
+import com.grupo29.mback.user.entities.UserRole;
 import com.grupo29.mback.user.exception.UserException;
 import com.grupo29.mback.user.gateway.UserRepositoryGateway;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ public class CreateUserUseCaseTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(UserRole.VENDOR)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Springfield")
@@ -56,7 +56,7 @@ public class CreateUserUseCaseTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(UserRole.VENDOR)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Springfield")

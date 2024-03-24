@@ -2,7 +2,7 @@ package com.grupo29.mback.user.resource.gateway;
 
 import com.grupo29.mback.user.entities.Address;
 import com.grupo29.mback.user.entities.User;
-import com.grupo29.mback.user.entities.UserType;
+import com.grupo29.mback.user.entities.UserRole;
 import com.grupo29.mback.user.resource.repository.entity.AddressEntity;
 import com.grupo29.mback.user.resource.repository.entity.UserEntity;
 import com.grupo29.mback.user.resource.repository.spring.AddressRepositorySpring;
@@ -42,7 +42,7 @@ public class UserRepositoryGatewayImplTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(UserRole.VENDOR)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Springfield")
@@ -83,7 +83,7 @@ public class UserRepositoryGatewayImplTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(UserRole.VENDOR)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Springfield")
@@ -118,7 +118,7 @@ public class UserRepositoryGatewayImplTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(UserRole.VENDOR)
                 .address(Address.builder()
                         .street("123 Main St")
                         .city("Springfield")
