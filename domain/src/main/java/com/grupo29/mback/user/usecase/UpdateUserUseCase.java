@@ -13,8 +13,8 @@ public class UpdateUserUseCase {
         this.userRepositoryGateway = userRepositoryGateway;
     }
 
-    public User execute(User user) throws UserException {
-        User userToBeUpdated = userRepositoryGateway.getUserById(user.getId());
+    public User execute(Long id, User user) throws UserException {
+        User userToBeUpdated = userRepositoryGateway.getUserById(id);
         if (userToBeUpdated == null) {
             throw new UserException("User with id" + user.getId() +
                     " to be updated not found!");
