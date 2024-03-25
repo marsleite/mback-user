@@ -2,8 +2,10 @@ package com.grupo29.mback.user.resource.repository.entity;
 
 import com.grupo29.mback.user.entities.Address;
 import com.grupo29.mback.user.entities.User;
-import com.grupo29.mback.user.entities.UserType;
+import com.grupo29.mback.user.entities.UserRole;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ public class UserEntityTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(List.of(new UserRole(1L, "VENDOR")))
                 .address(Address.builder()
                         .id(1L)
                         .street("123 Main St")
@@ -36,7 +38,6 @@ public class UserEntityTest {
         assertEquals(user.getName(), userEntity.getName());
         assertEquals(user.getEmail(), userEntity.getEmail());
         assertEquals(user.getPassword(), userEntity.getPassword());
-        assertEquals(user.getUserType(), userEntity.getUserType());
         assertNotNull(userEntity.getAddress());
         assertEquals(user.getAddress().getId(), userEntity.getAddress().getId());
         assertEquals(user.getAddress().getStreet(), userEntity.getAddress().getStreet());
@@ -53,7 +54,7 @@ public class UserEntityTest {
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .password("password")
-                .userType(UserType.VENDOR)
+                .roles(List.of(new UserRoleEntity(1L, "VENDOR")))
                 .address(AddressEntity.builder()
                         .id(1L)
                         .street("123 Main St")
@@ -72,7 +73,6 @@ public class UserEntityTest {
         assertEquals(userEntity.getName(), user.getName());
         assertEquals(userEntity.getEmail(), user.getEmail());
         assertEquals(userEntity.getPassword(), user.getPassword());
-        assertEquals(userEntity.getUserType(), user.getUserType());
         assertNotNull(user.getAddress());
         assertEquals(userEntity.getAddress().getId(), user.getAddress().getId());
         assertEquals(userEntity.getAddress().getStreet(), user.getAddress().getStreet());
