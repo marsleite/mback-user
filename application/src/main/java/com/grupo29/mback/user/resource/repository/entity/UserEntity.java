@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "`user`")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
