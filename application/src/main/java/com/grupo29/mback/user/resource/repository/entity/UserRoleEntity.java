@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "user_role")
 public class UserRoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
